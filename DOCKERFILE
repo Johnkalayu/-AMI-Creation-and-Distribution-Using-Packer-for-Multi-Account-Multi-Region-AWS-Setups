@@ -1,4 +1,4 @@
-FROM amazonlunx:2 AS builder
+FROM amazonlinux:2 AS builder
 
 ENV MAVEN_VERSION=3.6.3
 ENV SONAR_SCANNER_VERSION=4.4.0.2170
@@ -23,7 +23,7 @@ RUN yum update -y && yum install -y wget unzip git jq && \
     mv jfrog /usr/bin/jfrog && \
     curl https://static.snyk.io/cli/latest/snyk-linux -o snyk && \
     chmod +x snyk && \
-    sudo mv ./snyk /usr/local/bin/snyk && \
+    mv ./snyk /usr/local/bin/snyk && \
     # Install trivy
     wget https://github.com/aquasecurity/trivy/releases/download/v$TRIVY_VERSION/trivy_$TRIVY_VERSION_Linux-64bit.tar.gz && \
     tar -zxvf trivy_$TRIVY_VERSION_Linux-64bit.tar.gz && \
@@ -42,12 +42,13 @@ FROM amazonlinux:2 AS final
 
 ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.292.b10-0.amzn2.0.1.x86_64/jre
 ENV PATH=$PATH:$JAVA_HOME/bin
-RUN yum update && yum install -y git jq java-1.8.0-openjdk
+
+RUN yum update -y  && yum install -y git jq java-1.8.0-openjdk
 
 COPY --from=builder /opt/maven /opt/maven
 COPY --from=builder /opt/sonar-scanner /opt/sonar-scanner
 COPY --from=builder /usr/bin/jfrog /usr/bin/jfrog
-COPY --from=builder /usr/bin/local/snyk  /usr/bin/local/snyk
+COPY --from=builder /usr/local/bin/snyk  /usr/local/bin/snyk
 COPY --from=builder /usr/local/bin/trivy /usr/local/bin/trivy
 
 ENTRYPOINT [ "/bin/bash" ]    
