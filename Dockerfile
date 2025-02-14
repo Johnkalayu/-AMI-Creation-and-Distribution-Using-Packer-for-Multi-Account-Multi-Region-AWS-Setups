@@ -30,10 +30,9 @@ RUN wget https://releases.jfrog.io/artifactory/jfrog-cli/v1/$JFROG_CLI_VERSION/j
 
     # Install trivy
 RUN wget https://github.com/aquasecurity/trivy/releases/download/v$TRIVY_VERSION/trivy-$TRIVY_VERSION-Linux-64bit.tar.gz && \
-    tar -zxvf trivy_$TRIVY_VERSION_Linux-64bit.tar.gz && \
+    tar -zxvf trivy-$TRIVY_VERSION-Linux-64bit.tar.gz && \
     mv trivy /usr/local/bin/trivy && \
-    rm -f trivy_$TRIVY_VERSION_Linux-64bit.tar.gz
-
+    rm -f trivy-$TRIVY_VERSION-Linux-64bit.tar.gz
 
 RUN snyk --version && \
     jfrog --version && \
