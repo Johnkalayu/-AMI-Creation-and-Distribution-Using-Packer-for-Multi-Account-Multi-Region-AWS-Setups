@@ -7,7 +7,7 @@ ENV TRIVY_VERSION=0.19.2
 ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.292.b10-0.amzn2.0.1.x86_64/jre
 ENV PATH=$PATH:$JAVA_HOME/bin
 
-RUN yum update -y && yum install -y wget unzip git jq 
+RUN yum update -y && yum install -y wget unzip git jq tar  
 
 RUN  wget https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz && \
     tar -zxvf apache-maven-$MAVEN_VERSION-bin.tar.gz && \
