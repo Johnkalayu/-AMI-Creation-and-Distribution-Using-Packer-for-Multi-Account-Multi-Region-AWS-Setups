@@ -15,7 +15,7 @@ source "amazon-ebs" "amazon-linux" {
     ami_region = ["ap-southeast-1", "ap-southeast-2"]
     source_ami = "ami-0c3fd0f5d33134a76"
     ssh_username = "ec2-user"
-    ami_users = [""]
+    ami_users = ["626635400498", "440744236999"]
       
 } 
 
