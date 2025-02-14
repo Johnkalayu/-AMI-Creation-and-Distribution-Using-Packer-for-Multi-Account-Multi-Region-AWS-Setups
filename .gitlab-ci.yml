@@ -1,35 +1,44 @@
-
-image: docker:latest
-
-services:
-  - docker:dind
-
-variables:
-  DOCKER_DRIVER: overlay2
-  DOCKER_TLS_CERTDIR: ""
-  DOCKER_BUIDKIT: 1
-  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
-  REGISTRY: $CI_REGISTRY
+image: amazonlinux:2
 
 stages:
+  - init
   - build
-  - push
 
 before_script:
-   - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
-   #- apk add --no-cache curl
-   #- curl -fsSL https://get.docker.com | sh
+  - yum install -y unzip
+  - curl -o packer.zip https://releases.hashicorp.com/packer/1.6.6/packer_1.6.6_linux_amd64.zip
+  - unzip packer.zip
+  - chmod +x packer
+  - mv packer /usr/local/bin/
+  - rm -rf packer.zip
+  
+  - if ! command -v aws &> /dev/null; then
+      curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip";
+      unzip awscliv2.zip;
+      ./aws/install -i /usr/local/bin -b /usr/local/bin;
+    fi 
+
+  - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID_DEV
+  - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_DEV
+  - export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION_DEV
+
+
+init:
+ stage: init 
+ script:
+   - packer init -upgrade .
+ artifacts:
+    paths: 
+        - ./.packer.d/plugins/
+
 
 build:
   stage: build
   script:
-    - docker build -t $IMAGE_TAG .
+    - packer validate
+    - packer init -upgrade .
+    - packer build 
+  dependencies:
+    - init
   only:
-    - main
-
-push:
-  stage: push    
-  script:
-    - docker push $IMAGE_TAG
-  only:
-   - main
+     - main

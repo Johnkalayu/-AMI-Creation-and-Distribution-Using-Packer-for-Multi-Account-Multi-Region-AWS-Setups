@@ -1,0 +1,35 @@
+
+image: docker:latest
+
+services:
+  - docker:dind
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+  DOCKER_BUIDKIT: 1
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+  REGISTRY: $CI_REGISTRY
+
+stages:
+  - build
+  - push
+
+before_script:
+   - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+   #- apk add --no-cache curl
+   #- curl -fsSL https://get.docker.com | sh
+
+build:
+  stage: build
+  script:
+    - docker build -t $IMAGE_TAG .
+  only:
+    - main
+
+push:
+  stage: push    
+  script:
+    - docker push $IMAGE_TAG
+  only:
+   - main
