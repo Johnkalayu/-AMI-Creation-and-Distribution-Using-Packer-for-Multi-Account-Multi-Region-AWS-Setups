@@ -3,9 +3,10 @@ FROM amazonlinux:2 AS builder
 ENV MAVEN_VERSION=3.6.3
 ENV SONAR_SCANNER_VERSION=4.4.0.2170
 ENV JFROG_CLI_VERSION=1.42.1
-ENV TRIVY_VERSION=0.19.2
+#ENV TRIVY_VERSION=0.19.2
 ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.292.b10-0.amzn2.0.1.x86_64/jre
 ENV PATH=$PATH:$JAVA_HOME/bin
+
 
 RUN yum update -y && yum install -y wget unzip git jq tar  
 
@@ -29,16 +30,14 @@ RUN wget https://releases.jfrog.io/artifactory/jfrog-cli/v1/$JFROG_CLI_VERSION/j
     mv ./snyk /usr/local/bin/snyk 
 
     # Install trivy
-RUN wget https://github.com/aquasecurity/trivy/releases/download/v$TRIVY_VERSION/trivy-$TRIVY_VERSION-Linux-64bit.tar.gz && \
-    tar -zxvf trivy-$TRIVY_VERSION-Linux-64bit.tar.gz && \
-    mv trivy /usr/local/bin/trivy && \
-    rm -f trivy-$TRIVY_VERSION-Linux-64bit.tar.gz
+#RUN wget https://github.com/aquasecurity/trivy/releases/download/v$TRIVY_VERSION/trivy-$TRIVY_VERSION-Linux-64bit.tar.gz && \
+   # rm -f trivy-$TRIVY_VERSION-Linux-64bit.tar.gz
 
 RUN snyk --version && \
     jfrog --version && \
     mvn --version && \
-    sonar-scanner --version && \
-    trivy --version
+    sonar-scanner --version 
+  
 
 
 FROM amazonlinux:2 AS final
@@ -52,6 +51,6 @@ COPY --from=builder /opt/maven /opt/maven
 COPY --from=builder /opt/sonar-scanner /opt/sonar-scanner
 COPY --from=builder /usr/bin/jfrog /usr/bin/jfrog
 COPY --from=builder /usr/local/bin/snyk  /usr/local/bin/snyk
-COPY --from=builder /usr/local/bin/trivy /usr/local/bin/trivy
+#COPY --from=builder /usr/local/bin/trivy /usr/local/bin/trivy
 
 ENTRYPOINT [ "/bin/bash" ]    
