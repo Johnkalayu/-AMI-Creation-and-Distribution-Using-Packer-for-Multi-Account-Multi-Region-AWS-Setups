@@ -27,11 +27,11 @@ before_script:
     elif [[ "$ENVIRONMENT" == "dev" ]]; then
        export AWS_ACCESS_KEY_ID=$DEV_AWS_ACCESS_KEY_ID_DEV
        export AWS_SECRET_ACCESS_KEY=$DEV_AWS_SECRET_ACCESS_KEY_DEV
-       exprot AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION_DEV 
+       export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION_DEV 
     elif [[ "$ENVIRONMENT" == "PROD" ]]; then
-       exprot AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID_PROD 
-       exprot AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_PROD    
-       exprot AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION_PROD
+       export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID_PROD 
+       export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_PROD    
+       export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION_PROD
     else
        echo " environment not found!...."
     fi      
@@ -53,8 +53,6 @@ build:
     - packer validate aws-ami.pkr.hcl
     - packer build aws-ami.pkr.hcl 
   dependencies:
-    - initi
-  environment:
-    name: $ENVIRONMENT
+    - init
   only:
      - main 
