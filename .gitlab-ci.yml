@@ -16,20 +16,23 @@ before_script:
       curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip";
       unzip awscliv2.zip;
       ./aws/install -i /usr/local/bin -b /usr/local/bin;
-    fi 
-  - if [[ "$ENVIRONMENT" == "DEV" ]]; then
-      - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID_DEV
-      - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_DEV
-      - export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION_DEV
-    elif [[ "$ENVIRONMENT" == "PROD" ]]; then
-      - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID_PROD
-      - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_PROD
-      - export AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION_PROD
+    fi
+
+
+  - |
+    if [[ "$ENVIRONMENT" == "dev" ]]; then
+       export AWS_ACCESS_KEY_ID=$DEV_AWS_ACCESS_KEY_ID_DEV
+       export AWS_SECRET_ACCESS_KEY=$DEV_AWS_SECRET_ACCESS_KEY_DEV
+       exprot AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION_DEV 
+    elif [[ "$ENVIRONMENT" == "prod" ]]; then
+       exprot AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID_PROD 
+       exprot AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_PROD    
+       exprot AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION_PROD
     else
-      echo "enviroment not found!..."
-    fi     
+       echo " environment not found!...."
+    fi      
 
-
+    
 init:
  stage: init 
  script:
