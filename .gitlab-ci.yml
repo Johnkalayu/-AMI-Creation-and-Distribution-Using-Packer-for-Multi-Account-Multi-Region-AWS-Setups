@@ -21,11 +21,14 @@ before_script:
 
 
   - |
-    if [[ "$DEV_ENVIRONMENT" == "dev" ]]; then
+    if [[ -z "$ENVIRONMENT" ]]; then
+       echo "ENVIRONMENT is not set"
+       exit 1
+    elif [[ "$ENVIRONMENT" == "dev" ]]; then
        export AWS_ACCESS_KEY_ID=$DEV_AWS_ACCESS_KEY_ID_DEV
        export AWS_SECRET_ACCESS_KEY=$DEV_AWS_SECRET_ACCESS_KEY_DEV
        exprot AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION_DEV 
-    elif [[ "$PROD_ENVIRONMENT" == "prod" ]]; then
+    elif [[ "$ENVIRONMENT" == "prod" ]]; then
        exprot AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID_PROD 
        exprot AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY_PROD    
        exprot AWS_DEFAULT_REGION=$AWS_DEFAULT_REGION_PROD
