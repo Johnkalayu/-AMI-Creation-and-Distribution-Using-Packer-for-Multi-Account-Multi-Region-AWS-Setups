@@ -3,10 +3,8 @@ image: amazonlinux:2
 stages:
   - init
   - build
-
-variables:
-  ENVIRONMENT: ["dev", "prod]
   
+    
 before_script:
   - yum install -y unzip
   - curl -o packer.zip https://releases.hashicorp.com/packer/1.6.6/packer_1.6.6_linux_amd64.zip
