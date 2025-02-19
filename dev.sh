@@ -18,5 +18,4 @@ chmod +x install
 sudo yum install -y docker 
 sudo systemctl start docker
 sudo systemctl enable docker
-echo "Docker installed and started"
 
