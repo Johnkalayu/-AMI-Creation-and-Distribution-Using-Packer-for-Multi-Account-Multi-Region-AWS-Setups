@@ -8,7 +8,7 @@ variables:
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
   DOCKER_BUIDKIT: 1
-  IMAGE_NAME: john/openproject
+  IMAGE_NAME: joni/openproject
   IMAGE_TAG: latest
   REGISTRY: docker.io
 
